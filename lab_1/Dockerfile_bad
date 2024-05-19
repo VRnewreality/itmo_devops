@@ -1,0 +1,13 @@
+FROM python:3.8
+
+RUN pip install apache-airflow
+
+WORKDIR /app
+
+COPY . /app
+
+RUN airflow db init
+
+CMD ["airflow", "webserver", "--port", "8080"]
+
+VOLUME /app/dags
