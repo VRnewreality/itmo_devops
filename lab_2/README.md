@@ -41,6 +41,35 @@
 ### Сети
 - **default**: Создает сеть с именем `airflow_network` для связи между контейнерами.
 
+## Переменные окружения
+
+В этом репозитории все переменные окружения прописаны не в сам **docker-compose.yml**, а в лежащий рядом файл **.env**. Это позволяет гибко настраивать окружение без необходимости редактирования самого файла **docker-compose.yml**.
+
+### В файле .env указаны следующие переменные:
+
+- AIRFLOW_IMAGE_NAME - имя образа, используемого для сервисов init, webserver и scheduler.
+- POSTGRES_USER - имя пользователя PostgreSQL.
+- POSTGRES_PASSWORD - пароль пользователя PostgreSQL.
+- POSTGRES_DB - имя базы данных PostgreSQL.
+- POSTGRES_PORT - порт, используемый для подключения к базе данных PostgreSQL.
+  
+### Файл .env
+
+Файл .env должен находиться в одном каталоге с файлом docker-compose.yml. Содержимое файла .env:
+
+```
+AIRFLOW_IMAGE_NAME=custom_airflow_image
+POSTGRES_USER=airflow
+POSTGRES_PASSWORD=airflow
+POSTGRES_DB=airflow
+POSTGRES_PORT=5432
+```
+
+Перед запуском docker-compose необходимо убедиться, что все переменные окружения в файле **.env** заданы верно.
+
+### Примечание
+Если вы используете операционную систему Windows, то файл .env должен иметь кодировку UTF-8 без BOM.
+
 ## Вопросы и ответы
 
 1. Можно ли ограничивать ресурсы (например, память или CPU) для сервисов в docker-compose.yml? Если нет, то почему, если да, то как?
