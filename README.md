@@ -48,7 +48,7 @@
 ## Kubernetes манифесты
 ![image](https://github.com/VRnewreality/itmo_devops/assets/115554194/7be6c1ec-061c-4391-83af-e2ef1a229381)
 
-## Проверка
+## Проверка состояния
 ![image](https://github.com/VRnewreality/itmo_devops/assets/115554194/3424d0f2-1aed-4639-96d9-5a33db0e9e38)
 ![image](https://github.com/VRnewreality/itmo_devops/assets/115554194/9cdc7e14-1544-47f3-b1b0-d5a4ddc3162c)
 ![image](https://github.com/VRnewreality/itmo_devops/assets/115554194/0c029fa6-ab38-4edc-897d-b538ba28af95)
@@ -59,3 +59,22 @@
 ![image](https://github.com/VRnewreality/itmo_devops/assets/115554194/5adf2639-46be-46a9-a6ab-052d5bf344b6)
 
 ![image](https://github.com/VRnewreality/itmo_devops/assets/115554194/f54bc61f-1dd0-4dc5-aafb-b817e3fe34e7)
+
+Проверьте состояние подов и сервисов:
+
+kubectl get pods
+kubectl get svc
+kubectl describe pod <pod-name>
+
+## Удаление ресурсов
+Чтобы удалить все созданные ресурсы, выполните:
+
+
+kubectl delete -f nextcloud-secret.yml
+kubectl delete -f nextcloud-configmap.yml
+kubectl delete -f nextcloud-deployment.yml
+kubectl delete -f nextcloud-service.yml
+kubectl delete -f pg-secret.yml
+kubectl delete -f pg-configmap.yml
+kubectl delete -f pg-deployment.yml
+kubectl delete -f pg-service.yml
