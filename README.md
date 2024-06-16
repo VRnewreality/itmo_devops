@@ -61,15 +61,15 @@
 ![image](https://github.com/VRnewreality/itmo_devops/assets/115554194/f54bc61f-1dd0-4dc5-aafb-b817e3fe34e7)
 
 Проверьте состояние подов и сервисов:
-
+```bash
 kubectl get pods
 kubectl get svc
 kubectl describe pod <pod-name>
-
+```
 ## Удаление ресурсов
 Чтобы удалить все созданные ресурсы, выполните:
 
-
+```bash
 kubectl delete -f nextcloud-secret.yml
 kubectl delete -f nextcloud-configmap.yml
 kubectl delete -f nextcloud-deployment.yml
@@ -78,3 +78,4 @@ kubectl delete -f pg-secret.yml
 kubectl delete -f pg-configmap.yml
 kubectl delete -f pg-deployment.yml
 kubectl delete -f pg-service.yml
+```
