@@ -1,48 +1,61 @@
-# Лабораторная работа №3 - Nextcloud & PostgreSQL
+# Лабораторная работа №4 - Nextcloud & PostgreSQL
+# Развертывание Nextcloud и PostgreSQL в Minikube
 
-## Задачи
+## Описание
 
-1. Установить Kubernetes на локальную машину. 
-2. Создать yml-файлы
-3. Осуществить туннелирование трафика
-4. Установить допкомпонент dashboard для minikube
+Этот проект предназначен для развертывания двух сервисов (Nextcloud и PostgreSQL) в Minikube с использованием Kubernetes. Проект включает в себя кастомный образ для Nextcloud, использование ConfigMap и Secret, init-контейнеры, volumes, а также настройки liveness и readiness проб.
 
-## Результаты
+## Требования
 
-- Minikube start:<br/>
-![image](https://github.com/VRnewreality/itmo_devops/assets/48685561/18866afb-e7e2-4cf3-b9c0-4cd896dd1627)
+- Minikube
+- Docker
+- kubectl
 
-- Контейнер minikube:<br/>
-![image](https://github.com/VRnewreality/itmo_devops/assets/48685561/3d91ca6f-0f7a-4ad1-8fe7-8476debb6d3d)
+## Содержание
 
-- Манифесты:<br/>
-![image](https://github.com/VRnewreality/itmo_devops/assets/48685561/5e95c0da-d271-4ae0-a1ce-81b5f1fa8530)
+- [Подготовка окружения](#подготовка-окружения)
+- [Создание кастомного Docker-образа](#создание-кастомного-docker-образа)
+- [Kubernetes манифесты](#kubernetes-манифесты)
+- [Применение манифестов](#применение-манифестов)
+- [Проверка состояния](#проверка-состояния)
+- [Удаление ресурсов](#удаление-ресурсов)
 
-- Проверим успешность установки ресурсов:<br/>
-![image](https://github.com/VRnewreality/itmo_devops/assets/48685561/3c071c90-1a30-4789-bbac-a05a9d470176)
+## Подготовка окружения
 
-- Никаких паролей:<br/>
-![image](https://github.com/VRnewreality/itmo_devops/assets/48685561/a8b8a94a-3891-4c8f-925d-db4de1053338)
+1. Убедитесь, что у вас установлен Minikube, Docker и kubectl.
+2. Запустите Minikube:
 
-- Перенаправление портов:<br/>
-![image](https://github.com/VRnewreality/itmo_devops/assets/48685561/2244d2e3-3a74-4247-9ea3-3202cb3e3469)
+    ```bash
+    minikube start --driver=docker
+    ```
 
-- Туннелирование трафика между нодой minikube и сервисом:<br/>
-![image](https://github.com/VRnewreality/itmo_devops/assets/48685561/6560c9a0-da4b-4017-bac2-d5ff7db8e2e7)
+3. Настройте Docker окружение для использования Docker-демона внутри Minikube:
 
-- Всем присутствующим добрый вечер:<br/>
-![image](https://github.com/VRnewreality/itmo_devops/assets/48685561/e9704327-0da7-456a-a595-d77a8dad4644)
+    ```bash
+    & minikube -p minikube docker-env --shell powershell | Invoke-Expression
+    ```
 
-- Dashboard для minikube:
-![image](https://github.com/VRnewreality/itmo_devops/assets/48685561/bad02418-db4d-4a6d-8c7b-54aafe61f370)
+## Создание кастомного Docker-образа
 
-## Ответы на вопросы
+1. Соберите и загрузите образ в локальный Docker-реестр Minikube:
 
-1. **Важен ли порядок выполнения этих манифестов? Почему?**
+    ```bash
+    docker build -t custom-nextcloud:latest .
+    ```
+## Запуск minikube
+![image](https://github.com/VRnewreality/itmo_devops/assets/115554194/cfa31bb3-79a2-4fda-ae6f-b3d405492e54)
 
-   Порядок важен, если одни манифесты ссылаются на другие. Например, Deployment может зависеть от наличия Configmap или Secret для получения необходимых данных. Если ConfigMap или Secret не созданы до создания Deployment, контейнеры в подах могут не запуститься корректно из-за отсутствия конфигурационных данных.
+## Kubernetes манифесты
+![image](https://github.com/VRnewreality/itmo_devops/assets/115554194/7be6c1ec-061c-4391-83af-e2ef1a229381)
 
-2. **Что и почему произойдет, если отскейлить количество реплик postgres-deployment в 0, затем обратно в 1, после чего попробовать снова зайти на Nextcloud?**
+## Проверка
+![image](https://github.com/VRnewreality/itmo_devops/assets/115554194/3424d0f2-1aed-4639-96d9-5a33db0e9e38)
+![image](https://github.com/VRnewreality/itmo_devops/assets/115554194/9cdc7e14-1544-47f3-b1b0-d5a4ddc3162c)
+![image](https://github.com/VRnewreality/itmo_devops/assets/115554194/0c029fa6-ab38-4edc-897d-b538ba28af95)
 
-  Если мы отскейлим(уменьшим) количество реплик до 0, то база данных станет недоступна для nextcloud. При последующем увеличении количества реплик до 1, postgres будет запущен, но данные для аутентификации(авторизации) в nextcloud будут отсутствовать.
-   
+
+![image](https://github.com/VRnewreality/itmo_devops/assets/115554194/53d3c180-f469-4d68-9a28-c6156f967a35)
+![image](https://github.com/VRnewreality/itmo_devops/assets/115554194/016f6532-cd71-48de-a66b-89294ab09242)
+![image](https://github.com/VRnewreality/itmo_devops/assets/115554194/5adf2639-46be-46a9-a6ab-052d5bf344b6)
+
+![image](https://github.com/VRnewreality/itmo_devops/assets/115554194/f54bc61f-1dd0-4dc5-aafb-b817e3fe34e7)
