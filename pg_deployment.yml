@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres
+  name: postgres-deployment
   labels:
     app: postgres
 spec:
@@ -15,46 +15,34 @@ spec:
         app: postgres
     spec:
       containers:
-        - name: postgres-container
-          image: postgres:14
-          resources:
-            limits:
-              cpu: 200m
-              memory: 256Mi
-            requests:
-              cpu: 100m
-              memory: 128Mi
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 5432
-          envFrom:
-            - configMapRef:
-                name: postgres-configmap
-            - secretRef:
-                name: postgres-secret
-          env:
-            - name: POSTGRES_USER
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: POSTGRES_USER
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: POSTGRES_PASSWORD
-          livenessProbe:
-            tcpSocket:
-              port: 5432
-            initialDelaySeconds: 30
-            periodSeconds: 30
-            timeoutSeconds: 5
-          readinessProbe:
-            tcpSocket:
-              port: 5432
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 5
+      - name: postgres-container
+        image: postgres:latest
+        resources:
+          limits:
+            cpu: 500m
+            memory: 256Mi
+          requests:
+            cpu: 250m
+            memory: 128Mi
+        ports:
+          - containerPort: 5432
+        envFrom:
+          - configMapRef:
+              name: postgres-configmap
+          - secretRef:
+              name: postgres-secret
+        livenessProbe:
+          tcpSocket:
+            port: 5432
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 5
+        readinessProbe:
+          tcpSocket:
+            port: 5432
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
       volumes:
         - name: postgres-storage
           emptyDir: {}
